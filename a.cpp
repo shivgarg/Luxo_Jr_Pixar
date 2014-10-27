@@ -7,29 +7,33 @@
 #include "math.h"
 #include <stdlib.h> 
 #include <utility>
+#include <unistd.h>
 #include <climits>
-
-
+double x,y;
+int refreshMills=10;
 void display()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Load Identity
-	glLoadIdentity();
-	// Base Transformation
-	glRotatef(45,1,0,0);
 
-	glTranslatef(5,5,0);
+	glLoadIdentity();
+	gluLookAt(0,10,-20,0,0,0,0,1,0);
+	//
+	// Base Transformation
+	//glRotatef(45,1,0,0);
+
+	//glTranslatef(5,5,0);
 	
 	// Draw base;
 	glBegin(GL_POINTS);
 	for(int i=0;i<1000;++i)
 	  {
-	  	glVertex3f(cos(5*3.14159*i/1000.0),0,sin(5*3.14159*i/1000.0));
+	  	glVertex3f(cos(2*3.14159*i/1000.0),0,sin(2*3.14159*i/1000.0));
 	  }
  	glEnd();
  	
- 	glRotatef(30,0,1,0);
+ 	//glRotatef(30,0,1,0);
  	glScalef(1,5,1);
  	glTranslatef(0,0.4,0);
 	glutWireCube(0.8);
@@ -39,7 +43,13 @@ void display()
 	glTranslatef(0,0.6,0);
 
 	glutWireCube(0.4);
-
+	glLoadIdentity();
+	gluLookAt(0,10,-20,0,0,0,0,1,0);
+	glTranslatef(x,0,y);
+	glutSolidSphere(1.0,50,50);
+	x+=0.1;
+	y+=0.1;
+	//usleep(10000);
 
 	
 		
@@ -49,24 +59,49 @@ void display()
 
 }
 
-void reshape(int x,int y)
-{
-    if (y == 0 || x == 0) return;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-10.0, 10.0, -10.0, 10.0, -100.0, 100.0);
-    glMatrixMode(GL_MODELVIEW);
-    glViewport(0,0,x,y);
+// void reshape(int x,int y)
+// {
+//     if (y == 0 || x == 0) return;
+//     glMatrixMode(GL_PROJECTION);
+//     glLoadIdentity();
+//     glOrtho(-10.0, 10.0, -10.0, 10.0, -100.0, 100.0);
+//     glMatrixMode(GL_MODELVIEW);
+//     glViewport(0,0,x,y);
 
+// }
+
+
+void reshape(int x, int y) {  // GLsizei for non-negative integer
+   // Compute aspect ratio of the new window
+   if (y == 0) y = 1;                // To prevent divide by 0
+   GLfloat aspect = (GLfloat)x / (GLfloat)y;
+ 
+   // Set the viewport to cover the new window
+   glViewport(0, 0, x, y);
+ 
+   // Set the aspect ratio of the clipping volume to match the viewport
+   glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+   glLoadIdentity();             // Reset
+   // Enable perspective projection with fovy, aspect, zNear and zFar
+   gluPerspective(60.0f, aspect, 0.05f, 1000.0f);
 }
+
+void timer(int value) {
+   glutPostRedisplay();      // Post re-paint request to activate display()
+   glutTimerFunc(refreshMills, timer, 0); // next timer call milliseconds later
+}
+
 int main (int argc, char **argv)
 {
     
+    x=0;y=0;
     glutInit(&argc, argv); 
     glutInitWindowSize(300,300);
     glutCreateWindow("Heirarchical Modelling");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
+    glutTimerFunc(refreshMills,timer,0);
+    glutPostRedisplay();
     glutMainLoop();
     return 0;
 }
