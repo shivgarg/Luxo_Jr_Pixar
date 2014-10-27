@@ -31,12 +31,14 @@ void display()
  	
  	glRotatef(30,0,1,0);
  	glScalef(1,5,1);
- 	glTranslatef(0,0.5,0);
-	glutWireCube(1.0);
+ 	glTranslatef(0,0.4,0);
+	glutWireCube(0.8);
 
 	//glScalef(1,5,1);
-	glTranslatef(0,0.75,0);
-	glutWireCube(0.5);
+	glRotatef(35,0,0,1);
+	glTranslatef(0,0.6,0);
+
+	glutWireCube(0.4);
 
 
 	
