@@ -37,7 +37,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0,-20,t,0,0,0,0,0,1);
+	gluLookAt(0,-20,10,0,0,0,0,0,1);
 	
 	glColor3f(1.0,0,0);
 	// glBegin(GL_QUADS);
@@ -48,7 +48,7 @@ void display()
 	// glEnd();
 	glColor3f(1,1,1);
 	
-	
+	glPushMatrix();
 	gluCylinder(base,baserad,baserad,baseht,20,100);
 	glPushMatrix();
 	//glTranslatef(0,0,-1*baseht/2.0);
@@ -85,17 +85,17 @@ void display()
 	// //glRotatef(-90,1,0,0);
 	
 
-	// glPopMatrix();
-	// gluLookAt(0,-20,0,0,0,0,0,0,1);
-	// glTranslatef(x,z,0);
-	// cout << "x "<<x<<" z "<< z << endl;
-	// glutSolidSphere(1.0,500,500);
-	// x+=vball.x*refreshMills/1000;
-	// z+=vball.z*refreshMills/1000;
-	// if(abs((int)x)>(int)floorsize)
-	// 	x=-x;
-	// if(abs((int)z)>(int)floorsize)
-	// 	z=-z;
+	 glPopMatrix();
+	// gluLookAt(0,-20,10,0,0,0,0,0,1);
+	 glTranslatef(x,z,0);
+	 cout << "x "<<x<<" z "<< z << endl;
+	 glutSolidSphere(0.5,500,500);
+	 x+=vball.x*refreshMills/1000;
+	 z+=vball.z*refreshMills/1000;
+	 if(abs((int)x)>(int)floorsize)
+	 	x=-x;
+	 if(abs((int)z)>(int)floorsize)
+	 	z=-z;
 	// //usleep(10000);
 
 	
