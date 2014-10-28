@@ -17,22 +17,34 @@ using namespace std;
 double x,z;
 vector3d vball;
 int refreshMills=10;
+double ang=0;
+
+
+void keySpecialUp(int key, int x, int y) {
+  switch (key) {
+    case GLUT_KEY_UP: ang+=10; break;
+    case GLUT_KEY_DOWN: ang-=10; break;
+  }
+}
+
 
 void display()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	glClear(GL_COLOR_BUFFER_BIT);
+	
 	// Load Identity
 
 	glLoadIdentity();
 
-	gluLookAt(0,10,-20,0,0,0,0,1,0);
+	gluLookAt(0,0,-20,0,0,0,0,1,0);
+	glRotatef(ang,1,0,0);
 	glColor3f(1.0,0,0);
 	glBegin(GL_QUADS);
-		glVertex3f(-100,0,-100);
-		glVertex3f(-100,0,100);
-		glVertex3f(100,0,100);
-		glVertex3f(100,0,-100);
+		glVertex3f(-10,0,-10);
+		glVertex3f(-10,0,10);
+		glVertex3f(10,0,10);
+		glVertex3f(10,0,-10);
 	glEnd();
 	glColor3f(1,1,1);
 	//
@@ -42,33 +54,40 @@ void display()
 	//glTranslatef(5,5,0);
 	
 	// Draw base;
-	glBegin(GL_POINTS);
-	for(int i=0;i<1000;++i)
-	  {
-	  	glVertex3f(cos(2*3.14159*i/1000.0),0,sin(2*3.14159*i/1000.0));
-	  }
- 	glEnd();
+	glPushMatrix();
+	GLUquadricObj *base;
+	base=gluNewQuadric();
+	glRotatef(90,1,0,0);
+	gluCylinder(base,1,1,0.15,20,100);
+	glRotatef(-90,1,0,0);
+	glTranslatef(0,0,0.15);
+//	glBegin(GL_POINTS);
+//	for(int i=0;i<1000;++i)
+//	  {
+//	  	glVertex3f(cos(2*3.14159*i/1000.0),0,sin(2*3.14159*i/1000.0));
+//	  }
+ //	glEnd();
  	
  	//glRotatef(30,0,1,0);
  	glScalef(1,5,1);
  	glTranslatef(0,0.4,0);
-	glutWireCube(0.8);
+	glutSolidCube(0.8);
 
 	//glScalef(1,5,1);
 	glRotatef(35,0,0,1);
 	glTranslatef(0,0.6,0);
 
-	glutWireCube(0.4);
-	glLoadIdentity();
+	glutSolidCube(0.4);
+	glPopMatrix();
 	gluLookAt(0,10,-20,0,0,0,0,1,0);
 	glTranslatef(x,0,z);
 	cout << "x "<<x<<" z "<< z << endl;
 	glutSolidSphere(1.0,500,500);
 	x+=vball.x*refreshMills/1000;
 	z+=vball.z*refreshMills/1000;
-	if(abs((int)x)>100)
+	if(abs((int)x)>10)
 		x=-x;
-	if(abs((int)z)>100.0)
+	if(abs((int)z)>10.0)
 		z=-z;
 	//usleep(10000);
 
@@ -129,6 +148,7 @@ int main (int argc, char **argv)
     glutInitWindowSize(300,300);
     glutCreateWindow("Heirarchical Modelling");
     glutDisplayFunc(display);
+    glutSpecialUpFunc(keySpecialUp);
     glutReshapeFunc(reshape);
     glutTimerFunc(refreshMills,timer,0);
     glutPostRedisplay();
