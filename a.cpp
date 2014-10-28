@@ -4,13 +4,20 @@
 #include <vector>
 #include <stdio.h>
 #include <algorithm>
+#include "vec.cpp"
 #include "math.h"
 #include <stdlib.h> 
 #include <utility>
 #include <unistd.h>
 #include <climits>
-double x,y;
+#include <iostream>
+using namespace std;
+
+
+double x,z;
+vector3d vball;
 int refreshMills=10;
+
 void display()
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -18,7 +25,16 @@ void display()
 	// Load Identity
 
 	glLoadIdentity();
+
 	gluLookAt(0,10,-20,0,0,0,0,1,0);
+	glColor3f(1.0,0,0);
+	glBegin(GL_QUADS);
+		glVertex3f(-100,0,-100);
+		glVertex3f(-100,0,100);
+		glVertex3f(100,0,100);
+		glVertex3f(100,0,-100);
+	glEnd();
+	glColor3f(1,1,1);
 	//
 	// Base Transformation
 	//glRotatef(45,1,0,0);
@@ -45,10 +61,15 @@ void display()
 	glutWireCube(0.4);
 	glLoadIdentity();
 	gluLookAt(0,10,-20,0,0,0,0,1,0);
-	glTranslatef(x,0,y);
-	glutSolidSphere(1.0,50,50);
-	x+=0.1;
-	y+=0.1;
+	glTranslatef(x,0,z);
+	cout << "x "<<x<<" z "<< z << endl;
+	glutSolidSphere(1.0,500,500);
+	x+=vball.x*refreshMills/1000;
+	z+=vball.z*refreshMills/1000;
+	if(abs((int)x)>100)
+		x=-x;
+	if(abs((int)z)>100.0)
+		z=-z;
 	//usleep(10000);
 
 	
@@ -91,10 +112,19 @@ void timer(int value) {
    glutTimerFunc(refreshMills, timer, 0); // next timer call milliseconds later
 }
 
+void init()
+{
+	 x=0;z=0;
+	 vball.x=30;
+	 vball.y=0;
+	 vball.z=10;
+
+}
+
 int main (int argc, char **argv)
 {
     
-    x=0;y=0;
+   	init();
     glutInit(&argc, argv); 
     glutInitWindowSize(300,300);
     glutCreateWindow("Heirarchical Modelling");
