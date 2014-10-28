@@ -17,13 +17,16 @@ using namespace std;
 double x,z;
 vector3d vball;
 int refreshMills=10;
-double ang=0;
+double phi=0,theta=0;
+double cube1=0.0,cube2=0.0,floorsize=0.0;
 
 
 void keySpecialUp(int key, int x, int y) {
   switch (key) {
-    case GLUT_KEY_UP: ang+=10; break;
-    case GLUT_KEY_DOWN: ang-=10; break;
+    case GLUT_KEY_UP: phi+=10; break;
+    case GLUT_KEY_DOWN: phi-=10; break;
+    case GLUT_KEY_LEFT: theta-=10; break;
+    case GLUT_KEY_RIGHT: theta+=10; break;
   }
 }
 
@@ -32,52 +35,54 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	
-	// Load Identity
-
 	glLoadIdentity();
-
-	gluLookAt(0,0,-20,0,0,0,0,1,0);
-	glRotatef(ang,1,0,0);
+	gluLookAt(0,10,-20,0,0,0,0,1,0);
+	
 	glColor3f(1.0,0,0);
 	glBegin(GL_QUADS);
-		glVertex3f(-10,0,-10);
-		glVertex3f(-10,0,10);
-		glVertex3f(10,0,10);
-		glVertex3f(10,0,-10);
+		glVertex3f(-floorsize,0,-floorsize);
+		glVertex3f(-floorsize,0,floorsize);
+		glVertex3f(floorsize,0,floorsize);
+		glVertex3f(floorsize,0,-floorsize);
 	glEnd();
 	glColor3f(1,1,1);
-	//
-	// Base Transformation
-	//glRotatef(45,1,0,0);
-
-	//glTranslatef(5,5,0);
 	
-	// Draw base;
 	glPushMatrix();
-	GLUquadricObj *base;
+	GLUquadricObj *base,*btm,*top,*bulb;
 	base=gluNewQuadric();
+	btm=gluNewQuadric();
+	top=gluNewQuadric();
+	bulb=gluNewQuadric();
 	glRotatef(90,1,0,0);
 	gluCylinder(base,1,1,0.15,20,100);
+	glColor3f(0,0,1);
+	gluDisk(btm,0,1,100,100);
+
 	glRotatef(-90,1,0,0);
 	glTranslatef(0,0,0.15);
-//	glBegin(GL_POINTS);
-//	for(int i=0;i<1000;++i)
-//	  {
-//	  	glVertex3f(cos(2*3.14159*i/1000.0),0,sin(2*3.14159*i/1000.0));
-//	  }
- //	glEnd();
+	glColor3f(0,1,0);
+	gluDisk(btm,0,1,100,100);
+	glColor3f(1,1,1);
  	
- 	//glRotatef(30,0,1,0);
- 	glScalef(1,5,1);
- 	glTranslatef(0,0.4,0);
-	glutSolidCube(0.8);
+ 	//glScalef(1,5,1);
+ 	glRotatef(phi,0,0,-1);
+ 	glTranslatef(0,cube1/2.0,0);
+	glutWireCube(cube1);
 
-	//glScalef(1,5,1);
-	glRotatef(35,0,0,1);
-	glTranslatef(0,0.6,0);
+	
+	glTranslatef(0,cube1/2.0,0);
+	glRotatef(theta,0,0,-1);
+	glTranslatef(0,cube2/2.0,0);
+	glutWireCube(cube2);
+	//glScalef(1,0.2,1);
 
-	glutSolidCube(0.4);
+	glRotatef(0,0,0,-1);
+	glTranslatef(0,0.1+cube2/2.0,0);
+	glRotatef(90,1,0,0);
+	gluCylinder(bulb,0.3,0.1,0.2,50,50);
+	glRotatef(-90,1,0,0);
+	
+
 	glPopMatrix();
 	gluLookAt(0,10,-20,0,0,0,0,1,0);
 	glTranslatef(x,0,z);
@@ -85,9 +90,9 @@ void display()
 	glutSolidSphere(1.0,500,500);
 	x+=vball.x*refreshMills/1000;
 	z+=vball.z*refreshMills/1000;
-	if(abs((int)x)>10)
+	if(abs((int)x)>(int)floorsize)
 		x=-x;
-	if(abs((int)z)>10.0)
+	if(abs((int)z)>(int)floorsize)
 		z=-z;
 	//usleep(10000);
 
@@ -137,6 +142,11 @@ void init()
 	 vball.x=30;
 	 vball.y=0;
 	 vball.z=10;
+	 cube1=0.8;
+	 cube2=0.4;
+	 floorsize=50;
+	 phi=0;
+	 theta=0;
 
 }
 
