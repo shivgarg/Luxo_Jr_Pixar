@@ -18,6 +18,9 @@ using namespace std;
 vector3d vball;
 int refreshMills=10;
 int ballwait=0;
+bool hit=false;
+int hitwait=0;
+int beta=0;
 double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 
@@ -29,6 +32,7 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_RIGHT: theta+=10; break;
     case GLUT_KEY_F5:  alpha+=10; break;
     case GLUT_KEY_F6: alpha-=10; break;
+    case GLUT_KEY_F7: hit=true;break;
   }
 }
 
@@ -61,12 +65,34 @@ void display()
 	glColor3f(0.5,0.5,0.5);
 	gluDisk(top,0,baserad,100,100);
 	glPopMatrix();
+	glRotatef(beta,0,0,1);
 	glTranslatef(0,0,baseht);
 	glColor3f(1,0.5,0.5);
  	
- 	glRotatef(phi,0,1,0);
  	//glTranslatef(0,0,c1ht/2.0);
  	//glRotatef(90,1,0,0);
+ 	if(hit){
+ 		hitwait++;
+ 		if(hitwait>=100){
+ 			hit=false;
+ 			hitwait=0;
+ 			phi=0;
+ 			// alpha=40;
+ 		}
+ 		else if(hitwait>=50){
+ 			phi++;
+ 			alpha = alpha-3;
+ 			// theta = theta+2;
+ 		}
+ 		else{
+ 			phi--;
+ 			theta = theta+2;
+ 			alpha = alpha+1.5;
+ 		}
+ 	}
+
+ 	glRotatef(phi,0,1,0);
+
 	gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
 	//glRotatef(-90,1,0,0);
 	
@@ -164,10 +190,11 @@ void init()
 	 vball.x=30;
 	 vball.y=0;
 	 vball.z=0;
-	 floorsize=50;
+	 floorsize=30;
 	 phi=0;
 	 theta=30;
 	 alpha=40;
+	 beta=0;
 	 base=gluNewQuadric();
 	 btm=gluNewQuadric();
 	top=gluNewQuadric();
