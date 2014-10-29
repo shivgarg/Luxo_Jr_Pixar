@@ -17,6 +17,7 @@ using namespace std;
 
 vector3d vball;
 int refreshMills=10;
+int ballwait=0;
 double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 
@@ -93,9 +94,19 @@ void display()
 	 x+=vball.x*refreshMills/1000;
 	 z+=vball.z*refreshMills/1000;
 	 if(abs((int)x)>(int)floorsize)
-	 	x=-x;
+	 	vball.x=-vball.x;
 	 if(abs((int)z)>(int)floorsize)
-	 	z=-z;
+	 	vball.z=-vball.z;
+	 if(abs((int)x) < 1){
+	 	vball.x=0;
+	 	vball.z=0;
+	 	ballwait++;
+	 	if(ballwait>100){
+	 		ballwait=0;
+	 		vball.x = 30;
+	 		x=1;
+	 	}
+	 }
 	// //usleep(10000);
 
 	
@@ -152,7 +163,7 @@ void init()
 	 x=0;z=0;
 	 vball.x=30;
 	 vball.y=0;
-	 vball.z=10;
+	 vball.z=0;
 	 floorsize=50;
 	 phi=0;
 	 theta=30;
