@@ -14,13 +14,15 @@
 using namespace std;
 
 
-
 vector3d vball;
 int refreshMills=10;
 int ballwait=0;
+int ballhit=false;
 bool hit=false;
 int hitwait=0;
 int beta=0;
+int waitvelx=0;
+int waitvelz=0;
 double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 
@@ -69,25 +71,23 @@ void display()
 	glTranslatef(0,0,baseht);
 	glColor3f(1,0.5,0.5);
  	
- 	//glTranslatef(0,0,c1ht/2.0);
- 	//glRotatef(90,1,0,0);
  	if(hit){
  		hitwait++;
- 		if(hitwait>=100){
+ 		if(hitwait>=110){
  			hit=false;
  			hitwait=0;
  			phi=0;
- 			// alpha=40;
+ 			ballwait=0;
  		}
- 		else if(hitwait>=50){
- 			phi++;
- 			alpha = alpha-3;
- 			// theta = theta+2;
+ 		else if(hitwait>=100){
+ 			theta = theta-10;
+ 			alpha = alpha-7.5;
+ 			phi = phi+5;
  		}
  		else{
- 			phi--;
- 			theta = theta+2;
- 			alpha = alpha+1.5;
+ 			phi = phi-0.5;
+ 			theta = theta+1;
+ 			alpha = alpha+0.75;
  		}
  	}
 
@@ -119,40 +119,41 @@ void display()
 	 glutSolidSphere(0.5,500,500);
 	 x+=vball.x*refreshMills/1000;
 	 z+=vball.z*refreshMills/1000;
-	 if(abs((int)x)>(int)floorsize)
+	 if(abs((int)x)>(int)floorsize){
 	 	vball.x=-vball.x;
-	 if(abs((int)z)>(int)floorsize)
+		x+=vball.x*refreshMills/1000;
+	 }
+	 if(abs((int)z)>(int)floorsize){
 	 	vball.z=-vball.z;
-	 if(abs((int)x) < 1){
+		 z+=vball.z*refreshMills/1000;
+
+	 }
+
+	 if(abs((int)x) < 1 && abs((int)z)<1 && ballhit==false){
+	 	ballhit=true;
+	 	waitvelx=vball.x;
+	 	waitvelz=vball.z;
 	 	vball.x=0;
 	 	vball.z=0;
+	 }
+
+	 if(hit){
 	 	ballwait++;
-	 	if(ballwait>100){
+	 	if(ballwait>=99){
 	 		ballwait=0;
-	 		vball.x = 30;
-	 		x=1;
+	 		vball.x = -waitvelx;
+	 		vball.z = -waitvelz;
+	 		x=2*x;
+	 		z = 2*z;
+	 		ballhit=false;
+
 	 	}
 	 }
-	// //usleep(10000);
-
-	
-		
 	glFlush();
 	glutSwapBuffers();
 
 
 }
-
-// void reshape(int x,int y)
-// {
-//     if (y == 0 || x == 0) return;
-//     glMatrixMode(GL_PROJECTION);
-//     glLoadIdentity();
-//     glOrtho(-10.0, 10.0, -10.0, 10.0, -100.0, 100.0);
-//     glMatrixMode(GL_MODELVIEW);
-//     glViewport(0,0,x,y);
-
-// }
 
 
 void reshape(int x, int y) {  // GLsizei for non-negative integer
@@ -186,15 +187,15 @@ void init()
 	 bulbr1=0.2;
 	 bulbr2=0.4;
 	 bulbht=0.3;
-	 x=0;z=0;
-	 vball.x=30;
+	 x=2;z=2;
+	 vball.x=25;
 	 vball.y=0;
-	 vball.z=0;
+	 vball.z=25;
 	 floorsize=30;
 	 phi=0;
 	 theta=30;
 	 alpha=40;
-	 beta=0;
+	 beta=0;//not implement yet
 	 base=gluNewQuadric();
 	 btm=gluNewQuadric();
 	top=gluNewQuadric();
