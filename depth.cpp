@@ -24,7 +24,7 @@ int ballwait=0;
 bool hit=false;
 int hitwait=0;
 int beta=0;
-double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;
+double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0,lampang;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 
 void keySpecialUp(int key, int x, int y) {
@@ -36,6 +36,7 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_F5:  alpha+=10; break;
     case GLUT_KEY_F6: alpha-=10; break;
     case GLUT_KEY_F7: hit=true;break;
+    case GLUT_KEY_F8: lampang+=5;break;
   }
 }
 
@@ -45,6 +46,7 @@ void init(void)
     baserad=1.3;
     baseht=0.3;
     c1rad=0.45;
+    lampang=0;
     c2rad=0.45;
     c1ht=4;
     c2ht=3.5;
@@ -95,7 +97,7 @@ void display(void)
 	glPushMatrix();
     glColor3f(0.2,0.8,0.5);
     glBegin(GL_QUADS);
-    glNormal3f(0,0,-1);    
+    glNormal3f(0,0,1);    
  //    glTexCoord2f(0,0);
     glVertex3f(-50,-50,0);
      glNormal3f(0,0,1);
@@ -112,7 +114,7 @@ void display(void)
 	
    glColor3f(1,1,1);
    
-   
+   glRotatef(lampang,0,0,1);
    gluCylinder(base,baserad,baserad,baseht,20,100);
    glPushMatrix();
    //glTranslatef(0,0,-1*baseht/2.0);
@@ -213,7 +215,7 @@ glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
 
 
   glFlush ();
-  //glutSwapBuffers();
+  glutSwapBuffers();
 }
 
 void reshape (int w, int h)
@@ -242,7 +244,7 @@ void timer(int value) {
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
    glutInitWindowSize (500, 500); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow("Heirarchical Modelling");
