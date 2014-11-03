@@ -62,7 +62,7 @@ void init(void)
    vball.x=30;
    vball.y=0;
    vball.z=0;
-   floorsize=30;
+   floorsize=50;
    phi=0;
    theta=30;
    alpha=40;
@@ -99,7 +99,7 @@ void display(void)
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-   gluLookAt(0,-60,20,0,0,0,0,0,1);
+   gluLookAt(0,-40,20,0,0,0,0,0,1);
    GLfloat mat_specular[] = { 0.0, 1.0, 0, 0};
    GLfloat mat_shininess[] = { 10.0 };
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -108,32 +108,13 @@ void display(void)
     glColor3f(0.2,0.8,0.5);
     a.Render();
     b.Render2(b.ad);
- //    glBegin(GL_QUADS);
- //    glNormal3f(0,0,1);    
- // //    glTexCoord2f(0,0);
- //    glVertex3f(-50,-50,0);
- //     glNormal3f(0,0,1);
- // //    glTexCoord2f(0,1);
- //     glVertex3f(-50,50,0);
- //     glNormal3f(0,0,1);
- // //    glTexCoord2f(1,1);
- //     glVertex3f(50,50,0);
- //     glNormal3f(0,0,1);
- // //    glTexCoord2f(1,0);
- //     glVertex3f(50,-50,0);
- //   glEnd();
- //   //glutSolidSphere (4.0, 20, 16);
-	
-   glColor3f(1,1,1);
+
    
    glRotatef(lampang,0,0,1);
    gluCylinder(base,baserad,baserad,baseht,20,100);
    glPushMatrix();
-   //glTranslatef(0,0,-1*baseht/2.0);
    glColor3f(0,0,1);
    gluDisk(btm,0,baserad,100,100);
-   //glPopMatrix();
-   //glPushMatrix();
    glTranslatef(0,0,baseht);
    glColor3f(0.5,0.5,0.5);
    gluDisk(top,0,baserad,100,100);
@@ -141,8 +122,6 @@ void display(void)
    glRotatef(beta,0,0,1);
    glTranslatef(0,0,baseht);
    glColor3f(1.0,1.0,0.5);
-  
-   // glPopMatrix();
   if(hit){
     hitwait++;
     if(hitwait>=110){
@@ -164,52 +143,35 @@ void display(void)
   }
 
    glRotatef(phi,0,1,0);
-
    gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
-   
-   
-    glTranslatef(0,0,c1ht);
-    glRotatef(theta,0,1,0);
-   
-
-   
-    glColor3f(1,0,0);
-    glutSolidSphere(c1rad,100,100);
-    glColor3f(1.0,1.0,0.5);
-    gluCylinder(cube2,c2rad,c2rad,c2ht,20,100);
-   
-   
-    
-    glTranslatef(0,0,c2ht);
-    glRotatef(alpha,0,1,0);
-   
-    gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
-    GLfloat light_position_bulb[] = { 0, 0, 0.0, 1.0 };
-   	GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
-GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
-GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
-GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
-
-glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
-glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
-//glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-
-   	glLightfv(GL_LIGHT1, GL_POSITION, light_position_bulb);
-   	GLfloat light_dir_bulb[] = { 0, 0, 1.0 };
-   	glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,light_dir_bulb);
-   	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,45.0);
-   	// glLightfv(GL_LIGHT1,GL_SPOT_CUTOFF,45);
-   	glEnable(GL_LIGHT1);
-    glPopMatrix();
-//	glLoadIdentity();
-   
-    glTranslatef(x,z,0);
-    
-    glutSolidSphere(0.5,500,500);
-    x+=vball.x*refreshMills/1000;
-    z+=vball.z*refreshMills/1000;
+   glTranslatef(0,0,c1ht);
+   glRotatef(theta,0,1,0);
+   glColor3f(1,0,0);
+   glutSolidSphere(c1rad,100,100);
+   glColor3f(1.0,1.0,0.5);
+   gluCylinder(cube2,c2rad,c2rad,c2ht,20,100);
+   glTranslatef(0,0,c2ht);
+   glRotatef(alpha,0,1,0);
+   gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
+   GLfloat light_position_bulb[] = { 0, 0, 0.0, 1.0 };
+   GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+   GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
+   GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
+   GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
+   GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
+   glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+   glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+   glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+   glLightfv(GL_LIGHT1, GL_POSITION, light_position_bulb);
+   GLfloat light_dir_bulb[] = { 0, 0, 1.0 };
+   glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,light_dir_bulb);
+   glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,45.0);
+   glEnable(GL_LIGHT1);
+   glPopMatrix();
+   glTranslatef(x,z,0);
+   glutSolidSphere(0.5,500,500);
+   x+=vball.x*refreshMills/1000;
+   z+=vball.z*refreshMills/1000;
    if(abs((int)x)>(int)floorsize){
     vball.x=-vball.x;
     x+=vball.x*refreshMills/1000;
@@ -217,9 +179,7 @@ glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
    if(abs((int)z)>(int)floorsize){
     vball.z=-vball.z;
      z+=vball.z*refreshMills/1000;
-
    }
-
    if(abs((int)x) < 1 && abs((int)z)<1 && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
@@ -227,7 +187,6 @@ glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
     vball.x=0;
     vball.z=0;
    }
-
    if(hit){
     ballwait++;
     if(ballwait>=99){
@@ -237,7 +196,6 @@ glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
       x=2*x;
       z = 2*z;
       ballhit=false;
-
     }
    }
   glFlush ();
