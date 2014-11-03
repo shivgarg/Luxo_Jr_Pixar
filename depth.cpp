@@ -68,12 +68,12 @@ void init(void)
    cube2=gluNewQuadric();
 
    GLfloat mat_specular[] = { 0, 1.0, 0, 0};
-   GLfloat mat_shininess[] = { 10.0 };
+   GLfloat mat_shininess[] = { 0.0 };
    GLfloat light_position[] = { 10, 10, 10.0, 1.0 };
    glClearColor (1.0, 1.0,1.0, 1.0);
    glShadeModel (GL_SMOOTH);
 
-   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   // glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
@@ -95,7 +95,7 @@ void display(void)
 	glPushMatrix();
     glColor3f(0.2,0.8,0.5);
     glBegin(GL_QUADS);
-    glNormal3f(0,0,1);    
+    glNormal3f(0,0,-1);    
  //    glTexCoord2f(0,0);
     glVertex3f(-50,-50,0);
      glNormal3f(0,0,1);
@@ -171,8 +171,8 @@ void display(void)
     gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
     GLfloat light_position_bulb[] = { 0, 0, 0.0, 1.0 };
    	GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
+GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
 GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
 GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
 
