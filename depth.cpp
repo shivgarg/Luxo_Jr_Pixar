@@ -21,10 +21,14 @@ using namespace std;
 vector3d vball;
 int refreshMills=10;
 int ballwait=0;
+int ballhit=false;
 bool hit=false;
 int hitwait=0;
 int beta=0;
-double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0,lampang;
+int waitvelx=0;
+int waitvelz=0;
+double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;
+double lampang = 0;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 
 void keySpecialUp(int key, int x, int y) {
@@ -43,31 +47,31 @@ void keySpecialUp(int key, int x, int y) {
 
 void init(void) 
 {
-    baserad=1.3;
-    baseht=0.3;
-    c1rad=0.45;
-    lampang=0;
-    c2rad=0.45;
-    c1ht=4;
-    c2ht=3.5;
-    bulbr1=0.4;
-    bulbr2=2.0;
-    bulbht=1.0f;
-    x=0;z=0;
-    vball.x=30;
-    vball.y=0;
-    vball.z=0;
-    floorsize=30;
-    phi=0;
-    theta=30;
-    alpha=40;
-    beta=0;
-    base=gluNewQuadric();
-    btm=gluNewQuadric();
-   top=gluNewQuadric();
-   bulb=gluNewQuadric();
-   cube1=gluNewQuadric();
-   cube2=gluNewQuadric();
+   baserad=1.3;
+   baseht=0.3;
+   c1rad=0.45;
+   c2rad=0.45;
+   c1ht=4;
+   c2ht=3;
+   bulbr1=0.4;
+   bulbr2=2;
+   bulbht=1;
+   x=0;z=0;
+   vball.x=30;
+   vball.y=0;
+   vball.z=0;
+   floorsize=30;
+   phi=0;
+   theta=30;
+   alpha=40;
+   beta=0;//not implement yet
+   base=gluNewQuadric();
+   btm=gluNewQuadric();
+   lampang=0;
+  top=gluNewQuadric();
+  bulb=gluNewQuadric();
+  cube1=gluNewQuadric();
+  cube2=gluNewQuadric();
 
    GLfloat mat_specular[] = { 0, 1.0, 0, 0};
    GLfloat mat_shininess[] = { 0.0 };
@@ -131,25 +135,26 @@ void display(void)
    glColor3f(1.0,1.0,0.5);
   
    // glPopMatrix();
-    if(hit){
-      hitwait++;
-      if(hitwait>=100){
-         hit=false;
-         hitwait=0;
-         phi=0;
-         // alpha=40;
-      }
-      else if(hitwait>=50){
-         phi++;
-         alpha = alpha-3;
-         // theta = theta+2;
-      }
-      else{
-         phi--;
-         theta = theta+2;
-         alpha = alpha+1.5;
-      }
-   }
+  if(hit){
+    hitwait++;
+    if(hitwait>=110){
+      hit=false;
+      hitwait=0;
+      phi=0;
+      ballwait=0;
+    }
+    else if(hitwait>=100){
+      theta = theta-10;
+      alpha = alpha-7.5;
+      phi = phi+5;
+    }
+    else{
+      phi = phi-0.5;
+      theta = theta+1;
+      alpha = alpha+0.75;
+    }
+  }
+
    glRotatef(phi,0,1,0);
 
    gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
@@ -197,23 +202,36 @@ glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
     glutSolidSphere(0.5,500,500);
     x+=vball.x*refreshMills/1000;
     z+=vball.z*refreshMills/1000;
-    if(abs((int)x)>(int)floorsize)
-      vball.x=-vball.x;
-    if(abs((int)z)>(int)floorsize)
-      vball.z=-vball.z;
-    if(abs((int)x) < 1){
-      vball.x=0;
-      vball.z=0;
-      ballwait++;
-      if(ballwait>100){
-         ballwait=0;
-         vball.x = 30;
-         x=1;
-      }
+   if(abs((int)x)>(int)floorsize){
+    vball.x=-vball.x;
+    x+=vball.x*refreshMills/1000;
+   }
+   if(abs((int)z)>(int)floorsize){
+    vball.z=-vball.z;
+     z+=vball.z*refreshMills/1000;
+
+   }
+
+   if(abs((int)x) < 1 && abs((int)z)<1 && ballhit==false){
+    ballhit=true;
+    waitvelx=vball.x;
+    waitvelz=vball.z;
+    vball.x=0;
+    vball.z=0;
+   }
+
+   if(hit){
+    ballwait++;
+    if(ballwait>=99){
+      ballwait=0;
+      vball.x = -waitvelx;
+      vball.z = -waitvelz;
+      x=2*x;
+      z = 2*z;
+      ballhit=false;
+
     }
-   
-
-
+   }
   glFlush ();
   glutSwapBuffers();
 }
