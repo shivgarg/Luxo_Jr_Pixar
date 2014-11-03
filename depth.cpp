@@ -10,14 +10,16 @@
 #include "vec.cpp"
 #include "math.h"
 #include <stdlib.h> 
+#include "terrain.h"
 #include <utility>
 #include <unistd.h>
+#include "global.h"
 #include <climits>
 #include "first.h"
 #include <iostream>
 using namespace std;
 
-
+terrain a,b;
 vector3d vball;
 int refreshMills=10;
 int ballwait=0;
@@ -56,7 +58,7 @@ void init(void)
    bulbr1=0.4;
    bulbr2=2;
    bulbht=1;
-   x=0;z=0;
+   x=2;z=0;
    vball.x=30;
    vball.y=0;
    vball.z=0;
@@ -68,11 +70,15 @@ void init(void)
    base=gluNewQuadric();
    btm=gluNewQuadric();
    lampang=0;
-  top=gluNewQuadric();
-  bulb=gluNewQuadric();
-  cube1=gluNewQuadric();
-  cube2=gluNewQuadric();
-
+   top=gluNewQuadric();
+   bulb=gluNewQuadric();
+   cube1=gluNewQuadric();
+   cube2=gluNewQuadric();
+   a.textures="floor.bmp";
+   b.textures="wall.bmp";
+   b.Read();   
+   a.Read();
+   Texture *u=&(a.ad);
    GLfloat mat_specular[] = { 0, 1.0, 0, 0};
    GLfloat mat_shininess[] = { 0.0 };
    GLfloat light_position[] = { 10, 10, 10.0, 1.0 };
@@ -80,7 +86,7 @@ void init(void)
    glShadeModel (GL_SMOOTH);
 
    // glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   // glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
    glEnable(GL_LIGHTING);
@@ -93,28 +99,30 @@ void display(void)
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-   gluLookAt(0,-20,10,0,0,0,0,0,1);
+   gluLookAt(0,-60,20,0,0,0,0,0,1);
    GLfloat mat_specular[] = { 0.0, 1.0, 0, 0};
    GLfloat mat_shininess[] = { 10.0 };
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	glPushMatrix();
     glColor3f(0.2,0.8,0.5);
-    glBegin(GL_QUADS);
-    glNormal3f(0,0,1);    
- //    glTexCoord2f(0,0);
-    glVertex3f(-50,-50,0);
-     glNormal3f(0,0,1);
- //    glTexCoord2f(0,1);
-     glVertex3f(-50,50,0);
-     glNormal3f(0,0,1);
- //    glTexCoord2f(1,1);
-     glVertex3f(50,50,0);
-     glNormal3f(0,0,1);
- //    glTexCoord2f(1,0);
-     glVertex3f(50,-50,0);
-   glEnd();
-   //glutSolidSphere (4.0, 20, 16);
+    a.Render();
+    b.Render2(b.ad);
+ //    glBegin(GL_QUADS);
+ //    glNormal3f(0,0,1);    
+ // //    glTexCoord2f(0,0);
+ //    glVertex3f(-50,-50,0);
+ //     glNormal3f(0,0,1);
+ // //    glTexCoord2f(0,1);
+ //     glVertex3f(-50,50,0);
+ //     glNormal3f(0,0,1);
+ // //    glTexCoord2f(1,1);
+ //     glVertex3f(50,50,0);
+ //     glNormal3f(0,0,1);
+ // //    glTexCoord2f(1,0);
+ //     glVertex3f(50,-50,0);
+ //   glEnd();
+ //   //glutSolidSphere (4.0, 20, 16);
 	
    glColor3f(1,1,1);
    
