@@ -237,19 +237,44 @@ void terrain :: Render1(Texture a)
 		// 	}
 
 
+
+  
+double sca=0.25;
+for(int i=0;i<(int)(floorsize/sca);i++)
+{
+  for(int j=0;j<(int)(floorsize)/sca;j++)
+  {
+    
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(f(i)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(0.0f,0.0f,1.0f);
+    glVertex3f(-floorsize+2*i*sca,-floorsize+2*j*sca,0);
+    glTexCoord2f(f(i)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(0.0f,0.0f,1.0f);
+    glVertex3f(-floorsize+2*i*sca,-floorsize+2*j*sca+2*sca,0);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(0.0f,0.0f,1.0f);
+    glVertex3f(-floorsize+2*i*sca+2*sca,-floorsize+2*j*sca+2*sca,0);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(0.0f,0.0f,1.0f);
+    glVertex3f(-floorsize+2*i*sca+2*sca,-floorsize+2*j*sca,0);
+    glEnd();
+}}
+
     glBegin(GL_QUADS);
     glTexCoord2f(0,0);
-    glNormal3f(0,0,1);
-    glVertex3f(-floorsize,-floorsize,0);
+    glNormal3f(0.0f,0.0f,-1.0f);
+    glVertex3f(-floorsize,-floorsize,floorsize);
     glTexCoord2f(0,1);
-    glNormal3f(0,0,1);
-    glVertex3f(-floorsize,floorsize,0);
+    glNormal3f(0.0f,0.0f,-1.0f);
+    glVertex3f(-floorsize,floorsize,floorsize);
     glTexCoord2f(1,1);
-    glNormal3f(0,0,1);
-    glVertex3f(floorsize,floorsize,0);
+    glNormal3f(0.0f,0.0f,-1.0f);
+    glVertex3f(floorsize,floorsize,floorsize);
     glTexCoord2f(1,0);
-    glNormal3f(0,0,1);
-    glVertex3f(floorsize,-floorsize,0);
+    glNormal3f(0.0f,0.0f,-1.0f);
+    glVertex3f(floorsize,-floorsize,floorsize);
     glEnd();
 
 	glDisable(GL_TEXTURE_2D);
@@ -299,51 +324,69 @@ void terrain :: Render2(Texture a)
     //  }
 
 
+double sca=0.25;
+for(int i=0;i<(int)(floorsize/sca);i++)
+{
+  for(int j=0;j<(int)(floorsize)/sca;j++)
+  {
     glBegin(GL_QUADS);
-    glTexCoord2f(0,0);
-    glNormal3f(1,0,0);
-    glVertex3f(-floorsize,-floorsize,0);
-    glTexCoord2f(0,1);
-    glNormal3f(1,0,0);
-    glVertex3f(-floorsize,-floorsize,floorsize);
-    glTexCoord2f(1,1);
-    glNormal3f(1,0,0);
-    glVertex3f(-floorsize,floorsize,floorsize);
-    glTexCoord2f(1,0);
-    glNormal3f(1,0,0);
-    glVertex3f(-floorsize,floorsize,0);
+    glTexCoord2f(f(i)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(1.0f,0.0f,0.0f);
+    glVertex3f(-floorsize,-floorsize+i*2*sca,j*sca);
+    glTexCoord2f(f(i)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(1.0f,0.0f,0.0f);
+    glVertex3f(-floorsize,-floorsize+i*2.0*sca,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(1.0f,0.0f,0.0f);
+    glVertex3f(-floorsize,-floorsize+2*sca+2*sca*i,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(1.0f,0.0f,0.0f);
+    glVertex3f(-floorsize,-floorsize+2*sca+2*sca*i,j*sca);
     glEnd();
+}}
+  
+
+
+for(int i=0;i<(int)(floorsize/sca);i++)
+{
+  for(int j=0;j<(int)(floorsize)/sca;j++)
+  {
+    glBegin(GL_QUADS);
+    glTexCoord2f(f(i)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(-1.0f,0.0f,0.0f);
+    glVertex3f(floorsize,-floorsize+i*2*sca,j*sca);
+    glTexCoord2f(f(i)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(-1.0f,0.0f,0.0f);
+    glVertex3f(floorsize,-floorsize+i*2.0*sca,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(-1.0f,0.0f,0.0f);
+    glVertex3f(floorsize,-floorsize+2*sca+2*sca*i,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(-1.0f,0.0f,0.0f);
+    glVertex3f(floorsize,-floorsize+2*sca+2*sca*i,j*sca);
+    glEnd();
+}}
+for(int i=0;i<(int)(floorsize/sca);i++)
+{
+  for(int j=0;j<(int)(floorsize)/sca;j++)
+  {
+   
 
     glBegin(GL_QUADS);
-    glTexCoord2f(0,0);
-    glNormal3f(-1,0,0);
-    glVertex3f(floorsize,-floorsize,0);
-    glTexCoord2f(0,1);
-    glNormal3f(-1,0,0);
-    glVertex3f(floorsize,-floorsize,floorsize);
-    glTexCoord2f(1,1);
-    glNormal3f(-1,0,0);
-    glVertex3f(floorsize,floorsize,floorsize);
-    glTexCoord2f(1,0);
-    glNormal3f(-1,0,0);
-    glVertex3f(floorsize,floorsize,0);
+   glTexCoord2f(f(i)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(0.0f,-1.0f,0.0f);
+    glVertex3f(-floorsize+i*2*sca,floorsize,j*sca);
+    glTexCoord2f(f(i)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(0.0f,-1.0f,0.0f);
+    glVertex3f(-floorsize+i*2*sca,floorsize,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j+1)*sca/floorsize);
+    glNormal3f(0.0f,-1.0f,0.0f);
+    glVertex3f(-floorsize+2*sca+2*sca*i,floorsize,(j+1)*sca);
+    glTexCoord2f(f(i+1)*sca/floorsize,f(j)*sca/floorsize);
+    glNormal3f(0.0f,-1.0f,0.0f);
+   glVertex3f(-floorsize+2*sca+2*sca*i,floorsize,j*sca);
     glEnd();
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0,0);
-    glNormal3f(0,-1,0);
-    glVertex3f(-floorsize,floorsize,0);
-    glTexCoord2f(0,1);
-    glNormal3f(0,-1,0);
-    glVertex3f(-floorsize,floorsize,floorsize);
-    glTexCoord2f(1,1);
-    glNormal3f(0,-1,0);
-    glVertex3f(floorsize,floorsize,floorsize);
-    glTexCoord2f(1,0);
-    glNormal3f(0,-1,0);
-    glVertex3f(floorsize,floorsize,0);
-    glEnd();
-
+}}
 
   glDisable(GL_TEXTURE_2D);
   //glFlush();
