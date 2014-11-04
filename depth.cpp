@@ -31,7 +31,9 @@ int beta=0;
 int waitvelx=0;
 int waitvelz=0;
 double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;
-double lampang = 0;
+double lampang = 0;double lampang2=0;
+bool watch=false;
+double watchtime=0;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 bool jump=false;
 int jumpwait=0;
@@ -50,6 +52,7 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_F7: hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25; break;
     case GLUT_KEY_F8: lampang+=5;break;
     case GLUT_KEY_F9: lampang-=5;break;
+    case GLUT_KEY_F10: watch=true;break;
     // case GLUT_KEY_F11: lampx+=0.05*cos(lampang);lampz-=0.05*sin(lampang);cout<<sin(lampang)<<"h"<<endl;break;
     case GLUT_KEY_F11: jump=true;break;
   }
@@ -66,8 +69,8 @@ void init(void)
    c1ht=4;
    c2ht=3;
    bulbr1=0.4;
-   bulbr2=2;
-   bulbht=1;
+   bulbr2=1.5;
+   bulbht=2;
    x=3;z=0;
    vball.x=30;
    vball.y=0;
@@ -80,6 +83,7 @@ void init(void)
    base=gluNewQuadric();
    btm=gluNewQuadric();
    lampang=0;
+   lampang2=0;
    lampx=0;
    lampz=0;
    ballradius=1;
@@ -165,7 +169,6 @@ void display(void)
    glTranslatef(lampx,lampz,0);
    
 
-
    glRotatef(lampang,0,0,1);
    gluCylinder(base,baserad,baserad,baseht,20,100);
    glPushMatrix();
@@ -213,6 +216,20 @@ void display(void)
    glTranslatef(0,0,c2ht);
    glRotatef(alpha,0,1,0);
    glutSolidSphere(bulbr1,100,100);
+  if(watch){
+    watchtime++;
+    if(watchtime>100){
+      watchtime=0;
+      watch=false;
+    }
+    else if(watchtime>70){
+      lampang2-=3;
+    }
+    else if(watchtime<=30){
+      lampang2+=3;
+    }
+  }
+   glRotatef(lampang2,1,0,0);
    gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
    GLfloat light_position_bulb[] = { 0, 0,1.0, 1.0 };
    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
