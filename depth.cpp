@@ -78,13 +78,6 @@ void init(void)
    base=gluNewQuadric();
    btm=gluNewQuadric();
    lampang=0;
-<<<<<<< HEAD
-   top=gluNewQuadric();
-   bulb=gluNewQuadric();
-   cube1=gluNewQuadric();
-   cube2=gluNewQuadric();
-   a.textures="wall.bmp";
-=======
    lampx=0;
    lampz=0;
 
@@ -94,7 +87,7 @@ void init(void)
   cube1=gluNewQuadric();
   cube2=gluNewQuadric();
    a.textures="floor.bmp";
->>>>>>> 9bf75b7b78b2a04ec59dac2b113dd2326a0bfdf2
+
    b.textures="wall.bmp";
    b.Read();   
    a.Read();
