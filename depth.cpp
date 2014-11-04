@@ -40,23 +40,56 @@ int jumpwait=0;
 double move;
 double ballradius;
 
-
-void keySpecialUp(int key, int x1, int y1) {
-  switch (key) {
-    case GLUT_KEY_UP: phi+=10; break;
-    case GLUT_KEY_DOWN: phi-=10; break;
-    case GLUT_KEY_LEFT: theta-=10; break;
-    case GLUT_KEY_RIGHT: theta+=10; break;
-    case GLUT_KEY_F5:  alpha+=10; break;
-    case GLUT_KEY_F6: alpha-=10; break;
-    case GLUT_KEY_F7: hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25; break;
-    case GLUT_KEY_F8: lampang+=5;break;
-    case GLUT_KEY_F9: lampang-=5;break;
-    case GLUT_KEY_F10: watch=true;break;
-    // case GLUT_KEY_F11: lampx+=0.05*cos(lampang);lampz-=0.05*sin(lampang);cout<<sin(lampang)<<"h"<<endl;break;
-    case GLUT_KEY_F11: jump=true;break;
-  }
+bool* keyStates = new bool[256]; // Create an array of boolean values of length 256 (0-255)  
+  
+void keyOperations (void) {
+if (keyStates[GLUT_KEY_F5]) {
+  alpha+=1;
 }
+if (keyStates[GLUT_KEY_F6]) {
+  alpha-=1;
+}
+if (keyStates[GLUT_KEY_F7]) {
+hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25;
+}  
+if (keyStates[GLUT_KEY_F8]) {
+  lampang+=2;
+}
+if (keyStates[GLUT_KEY_F9]) {
+  lampang-=2;
+}
+if (keyStates[GLUT_KEY_F10]) {
+  watch=true;
+}
+if (keyStates[GLUT_KEY_F11]) {
+  jump=true;
+}
+}
+
+void keyPressed (int key, int x, int y) {  
+keyStates[key] = true; // Set the state of the current key to pressed  
+}  
+  
+void keyUp (int key, int x, int y) {  
+keyStates[key] = false; // Set the state of the current key to not pressed  
+}
+
+// void keySpecialUp(int key, int x1, int y1) {
+//   switch (key) {
+//     case GLUT_KEY_UP: phi+=10; break;
+//     case GLUT_KEY_DOWN: phi-=10; break;
+//     case GLUT_KEY_LEFT: theta-=10; break;
+//     case GLUT_KEY_RIGHT: theta+=10; break;
+//     case GLUT_KEY_F5:  alpha+=10; break;
+//     case GLUT_KEY_F6: alpha-=10; break;
+//     case GLUT_KEY_F7: hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25; break;
+//     case GLUT_KEY_F8: lampang+=5;break;
+//     case GLUT_KEY_F9: lampang-=5;break;
+//     case GLUT_KEY_F10: watch=true;break;
+//     // case GLUT_KEY_F11: lampx+=0.05*cos(lampang);lampz-=0.05*sin(lampang);cout<<sin(lampang)<<"h"<<endl;break;
+//     case GLUT_KEY_F11: jump=true;break;
+//   }
+// }
 
 
 void init(void) 
@@ -121,6 +154,7 @@ void init(void)
 
 void display(void)
 {
+  keyOperations();
   // cout<<x<<<<endl;
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
@@ -364,7 +398,10 @@ int main(int argc, char** argv)
 
    glutDisplayFunc(display); 
    glutReshapeFunc(reshape);
-   glutSpecialUpFunc(keySpecialUp);
+   // glutKeyboardFunc(keyPressed);
+   // glutKeyboardUpFunc(keyUp);
+   glutSpecialFunc(keyPressed);
+   glutSpecialUpFunc(keyUp);
    glutTimerFunc(refreshMills,timer,0);
    glutPostRedisplay();
     
