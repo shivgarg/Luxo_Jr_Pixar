@@ -30,7 +30,7 @@ int hitwait=0;
 int beta=0;
 int waitvelx=0;
 int waitvelz=0;
-double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,ballang,bulbht,t=0;
+double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,ballang,bulbht,t=0,lamp2x,lamp2z;
 double lampang = 0;double lampang2=0;
 bool watch=false;
 double watchtime=0;
@@ -42,6 +42,14 @@ double ballradius;
 
 bool* keyStates = new bool[256]; // Create an array of boolean values of length 256 (0-255)  
   
+double abso (double a){
+  if(a>0){
+    return a;
+  }
+  else{
+    return -1*a;
+  }
+}
 void keyOperations (void) {
 if (keyStates[GLUT_KEY_F5]) {
   alpha+=1;
@@ -63,6 +71,13 @@ if (keyStates[GLUT_KEY_F10]) {
 }
 if (keyStates[GLUT_KEY_F11]) {
   jump=true;
+}
+if (keyStates[GLUT_KEY_F12]) {
+  phi=0;
+  theta=30;
+  alpha=40;
+  vball.x=10;
+  vball.z=10;
 }
 }
 
@@ -118,6 +133,8 @@ void init(void)
    btm=gluNewQuadric();
    lampang=0;
    lampang2=0;
+   lamp2x=-20;
+      lamp2z=-20;
    lampx=0;
    lampz=0;
    ballradius=1;
@@ -324,11 +341,70 @@ if(ballang>360)
         ballang-=10;
 
     }
+    glPushMatrix();
 
    glTranslatef(x,z,ballradius);
       glRotatef(ballang,0,1,0);
    //glutSolidSphere(ballradius,500,500);
        c.spheretext(c.ad,ballradius);
+
+
+
+glPopMatrix();
+glTranslatef(lamp2x,lamp2z,0);
+//glRotatef(lampang,0,0,1);
+   gluCylinder(base,baserad,baserad,baseht,20,100);
+   glPushMatrix();
+  // glColor3f(0,0,1);
+   gluDisk(btm,0,baserad,100,100);
+   glTranslatef(0,0,baseht);
+   //glColor3f(0.5,0.5,0.5);
+   gluDisk(top,0,baserad,100,100);
+   glPopMatrix();
+
+   glTranslatef(0,0,baseht);
+
+   // glutSolidSphere(c1rad,100,100);
+   // gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
+   d.lp1(d.ad,c1rad,c1rad,c1ht);
+   glTranslatef(0,0,c1ht);
+   glRotatef(30,0,1,0);
+   //glColor3f(1,0,0);
+   // glutSolidSphere(c1rad,100,100);
+   // //glColor3f(1.0,1.0,0.5);
+   // gluCylinder(cube2,c2rad,c2rad,c2ht,20,100);
+   d.lp2(d.ad,c2rad,c2rad,c2ht);
+   glTranslatef(0,0,c2ht);
+    glRotatef(40,0,1,0);
+
+    
+
+    double move1 = 180.0*acos((x-lamp2x)/ sqrt( (x-lamp2x)*(x-lamp2x) + (z-lamp2z)*(z-lamp2z)))/3.14 ; if(z<lamp2z){move1 = 360-move1;};
+   glRotatef(move1,-1,0,0);
+      d.lp3(d.ad,bulbr1,bulbr2,bulbht);
+   //gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
+    GLfloat light2_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+   GLfloat light2_diffuse[] = { 1.0, 0.0, 1.0, 1.0 };
+   GLfloat light2_specular[] = { 1.0, 1.0, 0, 1.0 };
+   
+   glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
+   
+   glLightfv(GL_LIGHT2, GL_POSITION, light_position_bulb);
+   GLfloat light_dir_bulb2[] = { 0, 0, 1.0 };
+   glLightfv(GL_LIGHT2,GL_SPOT_DIRECTION,light_dir_bulb2);
+   glLightf(GL_LIGHT2,GL_SPOT_CUTOFF,30.0);
+    glLightf(GL_LIGHT2,GL_SPOT_EXPONENT,25.0);
+  glEnable(GL_LIGHT2);
+  
+
+
+
+
+
+
+
+
+
    x+=vball.x*refreshMills/1000;
    z+=vball.z*refreshMills/1000;
    if(abs((int)x)>(int)(floorsize-3)){
@@ -340,12 +416,18 @@ if(ballang>360)
      z+=vball.z*refreshMills/1000;
    }
 
-   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<2 && ballhit==false){
+   if( (abso((x-lampx)) <(ballradius+baserad)) && (abso((z-lampz))<(ballradius+baserad)) && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
     waitvelz=vball.z;
     vball.x=0;
     vball.z=0;
+   }
+     if( (abso(x-lamp2x) < (ballradius+baserad)) && (abso(z-lamp2z)<(ballradius+baserad)) ){
+   
+    vball.x=-vball.x;
+    vball.z=-vball.z;
+    cout << "hit with lamp"<< endl;
    }
    if(hit){
     ballwait++;

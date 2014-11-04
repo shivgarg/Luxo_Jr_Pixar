@@ -354,7 +354,7 @@ void terrain:: spheretext(Texture a,double ballradius)
 
 
   glBindTexture(GL_TEXTURE_2D, a.Terrainid);
-
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   gluQuadricTexture(quadsp,1);
 
 
@@ -371,7 +371,7 @@ void terrain:: lp1(Texture a, double b1,double b2,double ht)
 
 
   glBindTexture(GL_TEXTURE_2D, a.Terrainid);
-
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   gluQuadricTexture(quadlp1,1);
   gluQuadricTexture(quadlp1s,1);
   gluSphere(quadlp1s,b1,20,20);
@@ -387,7 +387,7 @@ void terrain:: lp3(Texture a, double b1,double b2,double ht)
 
 
   glBindTexture(GL_TEXTURE_2D, a.Terrainid);
-
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   gluQuadricTexture(quadlp3,1);
 gluCylinder(quadlp3,b1,b2,ht,20,100);
     gluQuadricTexture(quadlp3s,1);
@@ -404,7 +404,7 @@ void terrain:: lp2(Texture a, double b1,double b2,double ht)
 
 
   glBindTexture(GL_TEXTURE_2D, a.Terrainid);
-
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   gluQuadricTexture(quadlp2,1);
     gluQuadricTexture(quadlp2s,1);
  gluSphere(quadlp2s,b1,20,20);
