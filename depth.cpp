@@ -298,7 +298,7 @@ void display(void)
    glRotatef(lampang2,1,0,0);
       d.lp3(d.ad,bulbr1,bulbr2,bulbht);
    //gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
-   GLfloat light_position_bulb[] = { 0, 0,1.0, 1.0 };
+   GLfloat light_position_bulb[] = { 0, 0,0.0, 1.0 };
    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
    GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
    GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
