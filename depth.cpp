@@ -21,7 +21,7 @@ using namespace std;
 
 terrain a,b;
 vector3d vball;
-double lampx=0;double lampz=0;
+double lampx=0;double lampz=0;double lampy=0;
 int refreshMills=10;
 int ballwait=0;
 int ballhit=false;
@@ -41,7 +41,7 @@ double move;
 double ballradius;
 
 
-void keySpecialUp(int key, int x, int y) {
+void keySpecialUp(int key, int x1, int y1) {
   switch (key) {
     case GLUT_KEY_UP: phi+=10; break;
     case GLUT_KEY_DOWN: phi-=10; break;
@@ -118,6 +118,7 @@ void init(void)
 
 void display(void)
 {
+  // cout<<x<<<<endl;
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
@@ -151,22 +152,29 @@ void display(void)
 
    if(jump){
     jumpwait++;
-    cout<<jumpwait<<endl;
+    // cout<<jumpwait<<endl;
     if(jumpwait>20){
       jump=false;
       jumpwait=0;
     }
     else{
       if(jumpwait>10){
-        glTranslatef(0,0,4-0.2*jumpwait);
+        lampy = 6-0.3*jumpwait;
+        // glTranslatef(0,0,max(,2*ballradius));
       }
       else{
-        glTranslatef(0,0,0.2*jumpwait);
+        lampy = 0.3*jumpwait;
+        // glTranslatef(0,0,0.2*jumpwait);
       }
       lampx+=0.05*cos(lampang*2.0*3.14/360.0);lampz+=0.05*sin(lampang*2.0*3.14/360.0);
     }
+    if( abs((int)(x-lampx))<2 && abs((int)(z-lampz))<2 ){
+      lampy = max(lampy,2*ballradius);
+    }
+
    }
-   glTranslatef(lampx,lampz,0);
+
+   glTranslatef(lampx,lampz,lampy);
    
 
    glRotatef(lampang,0,0,1);
@@ -200,6 +208,7 @@ void display(void)
       alpha = alpha+1.5;
     }
     else{
+      // cout<<lampang<<endl;
       lampang = lampang+move/25;
     }
   }
@@ -260,25 +269,6 @@ void display(void)
 
    glPopMatrix();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    glTranslatef(x,z,ballradius);
    glutSolidSphere(ballradius,500,500);
    x+=vball.x*refreshMills/1000;
@@ -292,7 +282,7 @@ void display(void)
      z+=vball.z*refreshMills/1000;
    }
 
-   if(abs((int)(x-lampx)) < 3 && abs((int)(z-lampz))<3 && ballhit==false){
+   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<2 && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
     waitvelz=vball.z;
@@ -303,8 +293,10 @@ void display(void)
     ballwait++;
     if(ballwait>=74){
       ballwait=0;
-      vball.x = -waitvelx;
-      vball.z = -waitvelz;
+      double currvelocity = sqrt(waitvelx*waitvelx + waitvelz*waitvelz );
+      // cout<<lampang<<"lampang"<<endl;
+      vball.x = currvelocity*cos(3.14*lampang/180);
+      vball.z = currvelocity*sin(3.14*lampang/180);
       x+=vball.x*refreshMills/500;
       z+=vball.z*refreshMills/500;
       ballhit=false;
