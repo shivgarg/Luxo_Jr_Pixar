@@ -19,7 +19,7 @@
 #include <iostream>
 using namespace std;
 
-terrain a,b;
+terrain a,b,c,d;
 vector3d vball;
 double lampx=0;double lampz=0;double lampy=0;
 int refreshMills=10;
@@ -30,7 +30,7 @@ int hitwait=0;
 int beta=0;
 int waitvelx=0;
 int waitvelz=0;
-double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;
+double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,ballang,bulbht,t=0;
 double lampang = 0;double lampang2=0;
 bool watch=false;
 double watchtime=0;
@@ -78,6 +78,7 @@ void init(void)
    floorsize=30;
    phi=0;
    theta=30;
+      ballang=0;
    alpha=40;
    beta=0;//not implement yet
    base=gluNewQuadric();
@@ -92,11 +93,13 @@ void init(void)
   bulb=gluNewQuadric();
   cube1=gluNewQuadric();
   cube2=gluNewQuadric();
-   a.textures="k.bmp";
-
+  a.textures="k.bmp";
+   c.textures="ball.bmp";
    b.textures="wall.bmp";
+   d.textures="lamp.bmp";
    b.Read();   
-   a.Read();
+   a.Read();c.Read();d.Read();  
+
    //Texture *u=&(a.ad);
     GLfloat mat_specular[] = { 0.2, 0.2, 0.2, 1};
     GLfloat mat_shininess[] = { 0.0,0.0,0.0,1.0 };
@@ -214,17 +217,20 @@ void display(void)
   }
 
    glRotatef(phi,0,1,0);
-   glutSolidSphere(c1rad,100,100);
-   gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
+   // glutSolidSphere(c1rad,100,100);
+   // gluCylinder(cube1,c1rad,c1rad,c1ht,20,100);
+   d.lp1(d.ad,c1rad,c1rad,c1ht);
    glTranslatef(0,0,c1ht);
    glRotatef(theta,0,1,0);
    //glColor3f(1,0,0);
-   glutSolidSphere(c1rad,100,100);
-   //glColor3f(1.0,1.0,0.5);
-   gluCylinder(cube2,c2rad,c2rad,c2ht,20,100);
+   // glutSolidSphere(c1rad,100,100);
+   // //glColor3f(1.0,1.0,0.5);
+   // gluCylinder(cube2,c2rad,c2rad,c2ht,20,100);
+   d.lp2(d.ad,c2rad,c2rad,c2ht);
    glTranslatef(0,0,c2ht);
-   glRotatef(alpha,0,1,0);
-   glutSolidSphere(bulbr1,100,100);
+    glRotatef(alpha,0,1,0);
+   // glutSolidSphere(bulbr1,100,100);
+ 
   if(watch){
     watchtime++;
     if(watchtime>100){
@@ -239,7 +245,8 @@ void display(void)
     }
   }
    glRotatef(lampang2,1,0,0);
-   gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
+      d.lp3(d.ad,bulbr1,bulbr2,bulbht);
+   //gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
    GLfloat light_position_bulb[] = { 0, 0,1.0, 1.0 };
    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
    GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
@@ -251,6 +258,7 @@ void display(void)
    GLfloat light_dir_bulb[] = { 0, 0, 1.0 };
    glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,light_dir_bulb);
    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,30.0);
+    glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,25.0);
    glEnable(GL_LIGHT1);
     // glBegin(GL_QUADS);
     
@@ -268,9 +276,25 @@ void display(void)
     // glEnd();
 
    glPopMatrix();
+if(ballang>360)
+   {
+      ballang-=360;
+   }
+    else if (ballang<0)
+      ballang+=360;
+    else
+    {
+      if(vball.x>0)
+        ballang+=10;
+      else if(vball.x<0)
+        ballang-=10;
+
+    }
 
    glTranslatef(x,z,ballradius);
-   glutSolidSphere(ballradius,500,500);
+      glRotatef(ballang,0,1,0);
+   //glutSolidSphere(ballradius,500,500);
+       c.spheretext(c.ad,ballradius);
    x+=vball.x*refreshMills/1000;
    z+=vball.z*refreshMills/1000;
    if(abs((int)x)>(int)(floorsize-3)){

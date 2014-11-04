@@ -15,6 +15,7 @@
 #include <vector>
 typedef float f;
 float frustum[6][4];						
+GLUquadric *quadsp,*quadlp1,*quadlp2,*quadlp3,*quadlp1s,*quadlp2s,*quadlp3s;
 //double floorsize;
 		//!< This field stores the information of the frustum used for culling
 //! Extract the frustum
@@ -165,7 +166,14 @@ void terrain :: Read(void){
 	 	 			a.Terrainid=a.LoadImage();
 	 	 			ids=a.Terrainid;
 	 	 			ad=a;
-	 	 		
+	 	 		quadsp = gluNewQuadric();
+        quadlp1=gluNewQuadric();
+        quadlp2=gluNewQuadric();
+        quadlp3=gluNewQuadric();
+
+        quadlp1s=gluNewQuadric();
+        quadlp2s=gluNewQuadric();
+        quadlp3s=gluNewQuadric();
 	 	 	FILE * picfile;
 	 		picfile = fopen(textures.c_str(), "rb");
 	 		if (picfile == NULL)
@@ -204,38 +212,6 @@ void terrain :: Render1(Texture a)
 		// int w=(ad).terrainwidth;
 		// int h=(ad).terrainheight;
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		// for(int j=0;j+1<terrainwidth-1;j++)
-		// 	{	int i=0;
-
-		// 		while(i+1<terrainheight-1)
-		// 		{
-							
-
-		// 				if(PointInFrustum(i*SCALE,getHeight(i,j),j*SCALE)){
-								
-		// 					glBegin(GL_TRIANGLE_STRIP);
-  //                           glTexCoord2f(f(i)/terrainwidth,f(j)/terrainheight);
-  //                           //glNormal3f(normals[i][j].x,normals[i][j].y,normals[i][j].z);
-  //                           glVertex3f(i*SCALE,data[(j)*terrainwidth*3+i*3+1]*SCALE*HEIGHTSCALE,j*SCALE);
-
-  //                           glTexCoord2f(f(i+1.0)/terrainwidth,f(j)/terrainheight);
-  //                           //glNormal3f(normals[i+1][j].x,normals[i+1][j].y,normals[i+1][j].z);
-  //                           glVertex3f((i+1)*SCALE,data[(j)*terrainwidth*3+(i+1)*3+1]*SCALE*HEIGHTSCALE,j*SCALE);
-
-  //                           //glNormal3f(normals[i+1][j].x,normals[i+1][j].y,normals[i+1][j].z);
-  //                           glTexCoord2f(f(i)/terrainwidth,f(j+1)/terrainheight);
-  //                           glVertex3f(i*SCALE,data[(j+1)*terrainwidth*3+i*3+1]*SCALE*HEIGHTSCALE,(j+1)*SCALE);
-
-  //                           //glNormal3f(normals[i+1][j+1].x,normals[i+1][j+1].y,normals[i+1][j+1].z);
-  //                           glTexCoord2f(f(i+1)/terrainwidth,f(j+1)/terrainheight);
-  //                           glVertex3f((i+1)*SCALE,data[(j+1)*terrainwidth*3+(i+1)*3+1]*SCALE*HEIGHTSCALE,(j+1)*SCALE);
-
-  //                    glEnd();}
-  //                           i++;
-							
-		// 		}
-		// 	}
-
 
 
   
@@ -291,37 +267,7 @@ void terrain :: Render2(Texture a)
     // int w=(ad).terrainwidth;
     // int h=(ad).terrainheight;
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    // for(int j=0;j+1<terrainwidth-1;j++)
-    //  { int i=0;
 
-    //    while(i+1<terrainheight-1)
-    //    {
-              
-
-    //        if(PointInFrustum(i*SCALE,getHeight(i,j),j*SCALE)){
-                
-    //          glBegin(GL_TRIANGLE_STRIP);
-  //                           glTexCoord2f(f(i)/terrainwidth,f(j)/terrainheight);
-  //                           //glNormal3f(normals[i][j].x,normals[i][j].y,normals[i][j].z);
-  //                           glVertex3f(i*SCALE,data[(j)*terrainwidth*3+i*3+1]*SCALE*HEIGHTSCALE,j*SCALE);
-
-  //                           glTexCoord2f(f(i+1.0)/terrainwidth,f(j)/terrainheight);
-  //                           //glNormal3f(normals[i+1][j].x,normals[i+1][j].y,normals[i+1][j].z);
-  //                           glVertex3f((i+1)*SCALE,data[(j)*terrainwidth*3+(i+1)*3+1]*SCALE*HEIGHTSCALE,j*SCALE);
-
-  //                           //glNormal3f(normals[i+1][j].x,normals[i+1][j].y,normals[i+1][j].z);
-  //                           glTexCoord2f(f(i)/terrainwidth,f(j+1)/terrainheight);
-  //                           glVertex3f(i*SCALE,data[(j+1)*terrainwidth*3+i*3+1]*SCALE*HEIGHTSCALE,(j+1)*SCALE);
-
-  //                           //glNormal3f(normals[i+1][j+1].x,normals[i+1][j+1].y,normals[i+1][j+1].z);
-  //                           glTexCoord2f(f(i+1)/terrainwidth,f(j+1)/terrainheight);
-  //                           glVertex3f((i+1)*SCALE,data[(j+1)*terrainwidth*3+(i+1)*3+1]*SCALE*HEIGHTSCALE,(j+1)*SCALE);
-
-  //                    glEnd();}
-  //                           i++;
-              
-    //    }
-    //  }
 
 
 double sca=0.25;
@@ -398,6 +344,76 @@ for(int i=0;i<(int)(floorsize/sca);i++)
 	/param int i x value of the point whose height is to be calculated
 	/param int j z value of the point whose height is to be calculated
 */
+
+
+void terrain:: spheretext(Texture a,double ballradius)
+{
+
+  
+    glEnable(GL_TEXTURE_2D);
+
+
+  glBindTexture(GL_TEXTURE_2D, a.Terrainid);
+
+  gluQuadricTexture(quadsp,1);
+
+
+    gluSphere(quadsp,ballradius,20,20);
+
+     glDisable(GL_TEXTURE_2D);
+}
+
+
+void terrain:: lp1(Texture a, double b1,double b2,double ht)
+{
+
+    glEnable(GL_TEXTURE_2D);
+
+
+  glBindTexture(GL_TEXTURE_2D, a.Terrainid);
+
+  gluQuadricTexture(quadlp1,1);
+  gluQuadricTexture(quadlp1s,1);
+  gluSphere(quadlp1s,b1,20,20);
+  gluCylinder(quadlp1,b1,b2,ht,20,100);
+       glDisable(GL_TEXTURE_2D);
+}
+
+
+void terrain:: lp3(Texture a, double b1,double b2,double ht)
+{
+
+    glEnable(GL_TEXTURE_2D);
+
+
+  glBindTexture(GL_TEXTURE_2D, a.Terrainid);
+
+  gluQuadricTexture(quadlp3,1);
+gluCylinder(quadlp3,b1,b2,ht,20,100);
+    gluQuadricTexture(quadlp3s,1);
+  gluSphere(quadlp3s,b1,20,20);
+  
+       glDisable(GL_TEXTURE_2D);
+}
+
+
+void terrain:: lp2(Texture a, double b1,double b2,double ht)
+{
+
+    glEnable(GL_TEXTURE_2D);
+
+
+  glBindTexture(GL_TEXTURE_2D, a.Terrainid);
+
+  gluQuadricTexture(quadlp2,1);
+    gluQuadricTexture(quadlp2s,1);
+ gluSphere(quadlp2s,b1,20,20);
+  gluCylinder(quadlp2,b1,b2,ht,20,100);
+       glDisable(GL_TEXTURE_2D);
+}
+
+
+
 GLfloat terrain :: getHeight(int i,int j){
 	return (i<=0 or i>=terrainwidth-1 or j>=terrainheight-1 or j<=0)?data[abs(j-1)*terrainwidth*3+(i)*3+1]*SCALE*HEIGHTSCALE:data[(j)*terrainwidth*3+(i)*3+1]*SCALE*HEIGHTSCALE;
 }

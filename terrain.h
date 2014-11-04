@@ -62,6 +62,11 @@ public:
 	*/
 	void Render1(Texture );
 	void Render2(Texture );
+	void spheretext(Texture ,double);
+	void lp1(Texture , double ,double,double );
+	void lp2(Texture , double ,double ,double );
+	void lp3(Texture , double ,double ,double );
+
 	//! Reads the texture images and heightmap
 	/*!
 		This function is called in init and it makes textures objects and reads the heightmap and pathmap
