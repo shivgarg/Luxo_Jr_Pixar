@@ -203,7 +203,7 @@ void terrain :: Render1(Texture a)
 		glBindTexture(GL_TEXTURE_2D, (ad).Terrainid);
 		// int w=(ad).terrainwidth;
 		// int h=(ad).terrainheight;
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		// for(int j=0;j+1<terrainwidth-1;j++)
 		// 	{	int i=0;
 
@@ -265,7 +265,7 @@ void terrain :: Render2(Texture a)
     glBindTexture(GL_TEXTURE_2D, (a).Terrainid);
     // int w=(ad).terrainwidth;
     // int h=(ad).terrainheight;
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // for(int j=0;j+1<terrainwidth-1;j++)
     //  { int i=0;
 
@@ -316,31 +316,31 @@ void terrain :: Render2(Texture a)
 
     glBegin(GL_QUADS);
     glTexCoord2f(0,0);
-    glNormal3f(1,0,0);
+    glNormal3f(-1,0,0);
     glVertex3f(floorsize,-floorsize,0);
     glTexCoord2f(0,1);
-    glNormal3f(1,0,0);
+    glNormal3f(-1,0,0);
     glVertex3f(floorsize,-floorsize,floorsize);
     glTexCoord2f(1,1);
-    glNormal3f(1,0,0);
+    glNormal3f(-1,0,0);
     glVertex3f(floorsize,floorsize,floorsize);
     glTexCoord2f(1,0);
-    glNormal3f(1,0,0);
+    glNormal3f(-1,0,0);
     glVertex3f(floorsize,floorsize,0);
     glEnd();
 
     glBegin(GL_QUADS);
     glTexCoord2f(0,0);
-    glNormal3f(1,0,0);
+    glNormal3f(0,-1,0);
     glVertex3f(-floorsize,floorsize,0);
     glTexCoord2f(0,1);
-    glNormal3f(1,0,0);
+    glNormal3f(0,-1,0);
     glVertex3f(-floorsize,floorsize,floorsize);
     glTexCoord2f(1,1);
-    glNormal3f(1,0,0);
+    glNormal3f(0,-1,0);
     glVertex3f(floorsize,floorsize,floorsize);
     glTexCoord2f(1,0);
-    glNormal3f(1,0,0);
+    glNormal3f(0,-1,0);
     glVertex3f(floorsize,floorsize,0);
     glEnd();
 
