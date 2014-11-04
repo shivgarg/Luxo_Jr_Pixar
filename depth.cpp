@@ -21,6 +21,7 @@ using namespace std;
 
 terrain a,b;
 vector3d vball;
+double lampx=0;double lampz=0;
 int refreshMills=10;
 int ballwait=0;
 int ballhit=false;
@@ -32,6 +33,8 @@ int waitvelz=0;
 double x,z,phi,theta,alpha,floorsize,baserad,baseht,c1rad,c2rad,c1ht,c2ht,bulbr1,bulbr2,bulbht,t=0;
 double lampang = 0;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
+bool jump=false;
+int jumpwait=0;
 
 void keySpecialUp(int key, int x, int y) {
   switch (key) {
@@ -43,12 +46,17 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_F6: alpha-=10; break;
     case GLUT_KEY_F7: hit=true;break;
     case GLUT_KEY_F8: lampang+=5;break;
+    case GLUT_KEY_F9: lampx+=0.05;break;
+    case GLUT_KEY_F10: lampz+=0.05;break;
+    // case GLUT_KEY_F11: lampx+=0.05*cos(lampang);lampz-=0.05*sin(lampang);cout<<sin(lampang)<<"h"<<endl;break;
+    case GLUT_KEY_F11: jump=true;break;
   }
 }
 
 
 void init(void) 
 {
+
    baserad=1.3;
    baseht=0.3;
    c1rad=0.45;
@@ -62,7 +70,7 @@ void init(void)
    vball.x=30;
    vball.y=0;
    vball.z=0;
-   floorsize=50;
+   floorsize=30;
    phi=0;
    theta=30;
    alpha=40;
@@ -70,11 +78,23 @@ void init(void)
    base=gluNewQuadric();
    btm=gluNewQuadric();
    lampang=0;
+<<<<<<< HEAD
    top=gluNewQuadric();
    bulb=gluNewQuadric();
    cube1=gluNewQuadric();
    cube2=gluNewQuadric();
    a.textures="wall.bmp";
+=======
+   lampx=0;
+   lampz=0;
+
+
+  top=gluNewQuadric();
+  bulb=gluNewQuadric();
+  cube1=gluNewQuadric();
+  cube2=gluNewQuadric();
+   a.textures="floor.bmp";
+>>>>>>> 9bf75b7b78b2a04ec59dac2b113dd2326a0bfdf2
    b.textures="wall.bmp";
    b.Read();   
    a.Read();
@@ -127,7 +147,27 @@ void display(void)
     a.Render();
     b.Render2(b.ad);
 
+   if(jump){
+    jumpwait++;
+    cout<<jumpwait<<endl;
+    if(jumpwait>20){
+      jump=false;
+      jumpwait=0;
+    }
+    else{
+      if(jumpwait>10){
+        glTranslatef(0,0,4-0.2*jumpwait);
+      }
+      else{
+        glTranslatef(0,0,0.2*jumpwait);
+      }
+      lampx+=0.05*cos(lampang*2.0*3.14/360.0);lampz+=0.05*sin(lampang*2.0*3.14/360.0);
+    }
+   }
+   glTranslatef(lampx,lampz,0);
    
+
+
    glRotatef(lampang,0,0,1);
    gluCylinder(base,baserad,baserad,baseht,20,100);
    glPushMatrix();
@@ -211,7 +251,8 @@ void display(void)
     vball.z=-vball.z;
      z+=vball.z*refreshMills/1000;
    }
-   if(abs((int)x) < 1 && abs((int)z)<1 && ballhit==false){
+
+   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<1 && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
     waitvelz=vball.z;
@@ -224,8 +265,8 @@ void display(void)
       ballwait=0;
       vball.x = -waitvelx;
       vball.z = -waitvelz;
-      x=2*x;
-      z = 2*z;
+      x+=vball.x*refreshMills/500;
+      z+=vball.z*refreshMills/500;
       ballhit=false;
     }
    }
