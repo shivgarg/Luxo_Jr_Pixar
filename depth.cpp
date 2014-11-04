@@ -36,6 +36,7 @@ GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 bool jump=false;
 int jumpwait=0;
 double move;
+double ballradius;
 
 
 void keySpecialUp(int key, int x, int y) {
@@ -48,8 +49,7 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_F6: alpha-=10; break;
     case GLUT_KEY_F7: hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25; break;
     case GLUT_KEY_F8: lampang+=5;break;
-    case GLUT_KEY_F9: lampx+=0.05;break;
-    case GLUT_KEY_F10: lampz+=0.05;break;
+    case GLUT_KEY_F9: lampang-=5;break;
     // case GLUT_KEY_F11: lampx+=0.05*cos(lampang);lampz-=0.05*sin(lampang);cout<<sin(lampang)<<"h"<<endl;break;
     case GLUT_KEY_F11: jump=true;break;
   }
@@ -68,7 +68,7 @@ void init(void)
    bulbr1=0.4;
    bulbr2=2;
    bulbht=1;
-   x=2;z=0;
+   x=3;z=0;
    vball.x=30;
    vball.y=0;
    vball.z=0;
@@ -82,7 +82,7 @@ void init(void)
    lampang=0;
    lampx=0;
    lampz=0;
-
+   ballradius=1;
 
   top=gluNewQuadric();
   bulb=gluNewQuadric();
@@ -102,7 +102,7 @@ void init(void)
 
    // glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    // glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-   glLightfv(GL_LIGHT0,GL_AMBIENT,mat_specular);
+   glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_specular);
   // glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_shininess);
    	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
    	glEnable(GL_COLOR_MATERIAL);
@@ -214,7 +214,7 @@ void display(void)
    glRotatef(alpha,0,1,0);
    glutSolidSphere(bulbr1,100,100);
    gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
-   GLfloat light_position_bulb[] = { 0, 0, -1.0, 1.0 };
+   GLfloat light_position_bulb[] = { 0, 0,1.0, 1.0 };
    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
    GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
    GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
@@ -262,20 +262,20 @@ void display(void)
 
 
 
-   glTranslatef(x,z,0);
-   glutSolidSphere(0.5,500,500);
+   glTranslatef(x,z,ballradius);
+   glutSolidSphere(ballradius,500,500);
    x+=vball.x*refreshMills/1000;
    z+=vball.z*refreshMills/1000;
-   if(abs((int)x)>(int)floorsize){
+   if(abs((int)x)>(int)(floorsize-3)){
     vball.x=-vball.x;
     x+=vball.x*refreshMills/1000;
    }
-   if(abs((int)z)>(int)floorsize){
+   if(abs((int)z)>(int)(floorsize-3)){
     vball.z=-vball.z;
      z+=vball.z*refreshMills/1000;
    }
 
-   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<2 && ballhit==false){
+   if(abs((int)(x-lampx)) < 3 && abs((int)(z-lampz))<3 && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
     waitvelz=vball.z;
