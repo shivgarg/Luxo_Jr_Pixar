@@ -35,6 +35,8 @@ double lampang = 0;
 GLUquadricObj *base,*btm,*top,*bulb,*cube1,*cube2;
 bool jump=false;
 int jumpwait=0;
+double move;
+
 
 void keySpecialUp(int key, int x, int y) {
   switch (key) {
@@ -44,7 +46,7 @@ void keySpecialUp(int key, int x, int y) {
     case GLUT_KEY_RIGHT: theta+=10; break;
     case GLUT_KEY_F5:  alpha+=10; break;
     case GLUT_KEY_F6: alpha-=10; break;
-    case GLUT_KEY_F7: hit=true;break;
+    case GLUT_KEY_F7: hit=true; move = 180.0*acos((x-lampx)/ sqrt( (x-lampx)*(x-lampx) + (z-lampz)*(z-lampz)))/3.14 ; if(z<lampz){move = 360-move;}; while(lampang>360){lampang-=360;}; move -= lampang; hitwait = -25; break;
     case GLUT_KEY_F8: lampang+=5;break;
     case GLUT_KEY_F9: lampx+=0.05;break;
     case GLUT_KEY_F10: lampz+=0.05;break;
@@ -70,7 +72,7 @@ void init(void)
    vball.x=30;
    vball.y=0;
    vball.z=0;
-   floorsize=20;
+   floorsize=30;
    phi=0;
    theta=30;
    alpha=40;
@@ -94,14 +96,14 @@ void init(void)
    //Texture *u=&(a.ad);
     GLfloat mat_specular[] = { 0.2, 0.2, 0.2, 1};
     GLfloat mat_shininess[] = { 0.0,0.0,0.0,1.0 };
-   GLfloat light_position[] = { 0, 0, 100.0, 0.0 };
+   GLfloat light_position[] = { 100, 100, 100.0, 0.0 };
    glClearColor (1.0, 1.0,1.0, 1.0);
    glShadeModel (GL_SMOOTH);
 
    // glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    // glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
    glLightfv(GL_LIGHT0,GL_AMBIENT,mat_specular);
-   glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_shininess);
+  // glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_shininess);
    	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
    	glEnable(GL_COLOR_MATERIAL);
    glEnable(GL_LIGHTING);
@@ -115,7 +117,7 @@ void display(void)
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(0,-30.0,20.0,0,0,0,0,20/sqrt(1300),30/sqrt(1300));
+   gluLookAt(0,-40,20,0,0,0,0,0,1);
    GLfloat mat_specular[] = { 0.0, 0.0, 0, 0};
    GLfloat mat_shininess[] = { 10.0 };
     //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -178,21 +180,24 @@ void display(void)
    //glColor3f(1.0,1.0,0.5);
   if(hit){
     hitwait++;
-    if(hitwait>=110){
+    if(hitwait>=55){
       hit=false;
       hitwait=0;
       phi=0;
       ballwait=0;
     }
-    else if(hitwait>=100){
-      theta = theta-10;
-      alpha = alpha-7.5;
-      phi = phi+5;
+    else if(hitwait>=50){
+      theta = theta-20;
+      alpha = alpha-15;
+      phi = phi+10;
+    }
+    else if(hitwait>0){
+      phi = phi-1;
+      theta = theta+2;
+      alpha = alpha+1.5;
     }
     else{
-      phi = phi-0.5;
-      theta = theta+1;
-      alpha = alpha+0.75;
+      lampang = lampang+move/25;
     }
   }
 
@@ -209,7 +214,7 @@ void display(void)
    glRotatef(alpha,0,1,0);
    glutSolidSphere(bulbr1,100,100);
    gluCylinder(bulb,bulbr1,bulbr2,bulbht,50,50);
-   GLfloat light_position_bulb[] = { 0, 0, 1.0, 1.0 };
+   GLfloat light_position_bulb[] = { 0, 0, -1.0, 1.0 };
    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
    GLfloat light1_diffuse[] = { 1.0, 1.0, 0, 1.0 };
    GLfloat light1_specular[] = { 1.0, 1.0, 0, 1.0 };
@@ -270,7 +275,7 @@ void display(void)
      z+=vball.z*refreshMills/1000;
    }
 
-   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<1 && ballhit==false){
+   if(abs((int)(x-lampx)) < 2 && abs((int)(z-lampz))<2 && ballhit==false){
     ballhit=true;
     waitvelx=vball.x;
     waitvelz=vball.z;
@@ -279,7 +284,7 @@ void display(void)
    }
    if(hit){
     ballwait++;
-    if(ballwait>=99){
+    if(ballwait>=74){
       ballwait=0;
       vball.x = -waitvelx;
       vball.z = -waitvelz;
